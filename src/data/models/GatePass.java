@@ -6,7 +6,7 @@ public class GatePass {
     private int id;
     private int residentId;
     private int visitorsId;
-    private LocalDateTime createdAt =  LocalDateTime.now();
+    private LocalDateTime timeCreated =  LocalDateTime.now();
     private LocalDateTime expirationDate;
     private boolean isValid = true;
 
@@ -34,12 +34,8 @@ public class GatePass {
         this.visitorsId = visitorsId;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public LocalDateTime getTimeCreated() {
+        return timeCreated;
     }
 
     public LocalDateTime getExpirationDate() {
