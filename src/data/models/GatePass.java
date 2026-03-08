@@ -1,14 +1,15 @@
 package data.models;
 
-import java.time.LocalDateTime;
 
 public class GatePass {
     private int id;
     private int residentId;
-    private int visitorsId;
-    private LocalDateTime timeCreated =  LocalDateTime.now();
-    private LocalDateTime expirationDate;
-    private boolean isValid = true;
+    private int visitorId;
+
+    public GatePass(int residentId, int visitorId) {
+        this.residentId = residentId;
+        this.visitorId = visitorId;
+    }
 
     public int getId() {
         return id;
@@ -22,35 +23,7 @@ public class GatePass {
         return residentId;
     }
 
-    public void setResidentId(int residentId) {
-        this.residentId = residentId;
-    }
-
-    public int getVisitorsId() {
-        return visitorsId;
-    }
-
-    public void setVisitorsId(int visitorsId) {
-        this.visitorsId = visitorsId;
-    }
-
-    public LocalDateTime getTimeCreated() {
-        return timeCreated;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public boolean isValid() {
-        return isValid;
-    }
-
-    public void setValid(boolean valid) {
-        isValid = valid;
+    public int getVisitorId() {
+        return visitorId;
     }
 }

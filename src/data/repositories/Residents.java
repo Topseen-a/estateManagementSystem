@@ -1,10 +1,12 @@
 package data.repositories;
 
 import data.models.Resident;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Residents implements ResidentRepo {
+
     private List<Resident> residents = new ArrayList<>();
     private int nextId = 1;
 
@@ -25,13 +27,20 @@ public class Residents implements ResidentRepo {
 
     @Override
     public Resident save(Resident resident) {
+
+        if (resident == null) {
+            throw new IllegalArgumentException("Resident cannot be null");
+        }
+
         if (resident.getId() == 0) {
             resident.setId(nextId++);
             residents.add(resident);
         } else {
-            Resident existing = findById(resident.getId());
-            if (existing != null) {
-                int index = residents.indexOf(existing);
+
+            Resident existingResident = findById(resident.getId());
+
+            if (existingResident != null) {
+                int index = residents.indexOf(existingResident);
                 residents.set(index, resident);
             } else {
                 residents.add(resident);
@@ -42,20 +51,19 @@ public class Residents implements ResidentRepo {
 
     @Override
     public void delete(Resident resident) {
-        residents.remove(resident);
-    }
-
-    @Override
-    public void deleteById(int id) {
-        Resident resident = findById(id);
         if (resident != null) {
             residents.remove(resident);
         }
     }
 
     @Override
-    public void deleteByObject(Resident resident) {
-        delete(resident);
+    public void deleteById(int id) {
+
+        Resident resident = findById(id);
+
+        if (resident != null) {
+            residents.remove(resident);
+        }
     }
 
     @Override
@@ -63,6 +71,7 @@ public class Residents implements ResidentRepo {
         residents.clear();
     }
 
+    @Override
     public int count() {
         return residents.size();
     }

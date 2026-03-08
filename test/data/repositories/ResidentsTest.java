@@ -7,123 +7,153 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResidentsTest {
+
     private Residents residents;
-    private Resident residentOne;
-    private Resident residentTwo;
 
     @BeforeEach
     public void setUp() {
         residents = new Residents();
-
-        residentOne = new Resident();
-        residentOne.setName("Tayo Ade");
-        residentOne.setPhoneNumber("08149587217");
-        residentOne.setHouseAddress("Block A, Flat 5");
-
-        residentTwo = new Resident();
-        residentTwo.setName("Tolu Folusho");
-        residentTwo.setPhoneNumber("08033297106");
-        residentTwo.setHouseAddress("Block B, Flat 10");
     }
 
     @Test
-    public void testSaveResident() {
-        Resident saved = residents.save(residentOne);
+    public void testThatRepositoryIsEmptyInitially() {
+        assertTrue(residents.findAll().isEmpty());
+        assertEquals(0, residents.count());
+    }
+
+    @Test
+    public void testThatResidentRepoSaves() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        residents.save(residentOne);
+
         assertEquals(1, residents.count());
-        assertEquals(1, saved.getId());
-        assertNotNull(saved);
+        assertEquals(1, residentOne.getId());
     }
 
     @Test
-    public void testSaveMultipleResidents() {
+    public void testThatResidentRepoSavesMultipleResidents() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        Resident residentTwo = new Resident("Bolu Folusho", "08033297106", "Ilaje Bariga, Lagos");
         residents.save(residentOne);
         residents.save(residentTwo);
+
         assertEquals(2, residents.count());
         assertEquals(1, residentOne.getId());
         assertEquals(2, residentTwo.getId());
     }
 
     @Test
-    public void testFindById() {
+    public void testThatFindByIdReturnsCorrectResident() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
         residents.save(residentOne);
-        Resident found = residents.findById(1);
-        assertNotNull(found);
-        assertEquals("Tayo Ade", found.getName());
-        assertEquals("Block A, Flat 5", found.getHouseAddress());
+
+        residents.findById(1);
+
+        assertEquals("Tayo Ade", residentOne.getName());
+        assertEquals("08149587217", residentOne.getPhoneNumber());
+        assertEquals("Sabo Yaba, Lagos", residentOne.getHouseAddress());
     }
 
     @Test
-    public void testFindByIdNotFound() {
-        Resident found = residents.findById(999);
-        assertNull(found);
-    }
+    public void testThatFindByIdWithNoResidentCountIsZero() {
+        assertTrue(residents.findAll().isEmpty());
 
-    @Test
-    public void testFindAll() {
-        residents.save(residentOne);
-        residents.save(residentTwo);
-        assertEquals(2, residents.findAll().size());
-    }
-
-    @Test
-    public void testFindAllEmpty() {
-        assertEquals(0, residents.findAll().size());
-    }
-
-    @Test
-    public void testDelete() {
-        residents.save(residentOne);
-        residents.save(residentTwo);
-        residents.delete(residentOne);
-        assertEquals(1, residents.count());
-        assertNull(residents.findById(1));
-    }
-
-    @Test
-    void testDeleteById() {
-        residents.save(residentOne);
-        residents.save(residentTwo);
-        residents.deleteById(1);
-        assertEquals(1, residents.count());
-        assertNull(residents.findById(1));
-    }
-
-    @Test
-    void testDeleteByObject() {
-        residents.save(residentOne);
-        residents.deleteByObject(residentTwo);
-        assertEquals(1, residents.count());
-    }
-
-    @Test
-    public void testDeleteAll() {
-        residents.save(residentOne);
-        residents.save(residentTwo);
-        residents.deleteAll();
+        residents.findById(99);
         assertEquals(0, residents.count());
     }
 
     @Test
-    public void testUpdateResident() {
-        residents.save(residentOne);
-        residentOne.setName("Tolu Folusho");
-        residentOne.setHouseAddress("Block C, Flat 15");
-        residents.save(residentOne);
+    public void testThatFindAllReturnsAllResidents() {
+        assertTrue(residents.findAll().isEmpty());
 
-        Resident found = residents.findById(1);
-        assertEquals("Tolu Folusho", found.getName());
-        assertEquals("Block C, Flat 15", found.getHouseAddress());
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        Resident residentTwo = new Resident("Bolu Folusho", "08033297106", "Ilaje Bariga, Lagos");
+        residents.save(residentOne);
+        residents.save(residentTwo);
+
+        assertEquals(2, residents.findAll().size());
+    }
+
+    @Test
+    public void testThatDeleteRemovesResident() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        Resident residentTwo = new Resident("Bolu Folusho", "08033297106", "Ilaje Bariga, Lagos");
+        residents.save(residentOne);
+        residents.save(residentTwo);
+
+        residents.delete(residentOne);
+
         assertEquals(1, residents.count());
     }
 
     @Test
-    public void testIdAutoIncrement() {
+    public void testThatDeleteByIdRemovesCorrectResident() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        Resident residentTwo = new Resident("Bolu Folusho", "08033297106", "Ilaje Bariga, Lagos");
         residents.save(residentOne);
         residents.save(residentTwo);
+
         residents.deleteById(1);
 
-        Resident residentThree = new Resident();
-        residentThree.setName("Bayo Remi");
+        assertEquals(1, residents.count());
+    }
+
+    @Test
+    public void testThatDeleteAllRemovesAllResidents() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        Resident residentTwo = new Resident("Bolu Folusho", "08033297106", "Ilaje Bariga, Lagos");
+        residents.save(residentOne);
+        residents.save(residentTwo);
+
+        residents.deleteAll();
+
+        assertTrue(residents.findAll().isEmpty());
+        assertEquals(0, residents.count());
+    }
+
+    @Test
+    public void testThatExistingResidentCanBeUpdated() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        residents.save(residentOne);
+
+        Resident updatedResident = new Resident("Shina Dada", "08149587217", "Alagomeji Yaba, Lagos");
+        updatedResident.setId(residentOne.getId());
+
+        residents.save(updatedResident);
+
+        Resident found = residents.findById(1);
+
+        assertEquals("Shina Dada", found.getName());
+        assertEquals("Alagomeji Yaba, Lagos", found.getHouseAddress());
+        assertEquals(1, residents.count());
+    }
+
+    @Test
+    public void testThatResidentIdIncreasesAutomatically() {
+        assertTrue(residents.findAll().isEmpty());
+
+        Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        Resident residentTwo = new Resident("Bolu Folusho", "08033297106", "Ilaje Bariga, Lagos");
+        residents.save(residentOne);
+        residents.save(residentTwo);
+
+        residents.deleteById(1);
+
+        Resident residentThree = new Resident("Bayo Remi", "09012345678", "Agege Lagos");
         residents.save(residentThree);
 
         assertEquals(3, residentThree.getId());

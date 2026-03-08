@@ -1,10 +1,12 @@
 package data.repositories;
 
 import data.models.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Visitors implements VisitorRepo {
+
     private List<Visitor> visitors = new ArrayList<>();
     private int nextId = 1;
 
@@ -24,37 +26,44 @@ public class Visitors implements VisitorRepo {
     }
 
     @Override
-    public void save(Visitor visitor) {
+    public Visitor save(Visitor visitor) {
+
+        if (visitor == null) {
+            throw new IllegalArgumentException("Visitor cannot be null");
+        }
+
         if (visitor.getId() == 0) {
             visitor.setId(nextId++);
             visitors.add(visitor);
         } else {
-            Visitor existing = findById(visitor.getId());
-            if (existing != null) {
-                int index = visitors.indexOf(existing);
+
+            Visitor existingVisitor = findById(visitor.getId());
+
+            if (existingVisitor != null) {
+                int index = visitors.indexOf(existingVisitor);
                 visitors.set(index, visitor);
             } else {
                 visitors.add(visitor);
             }
         }
+        return visitor;
     }
 
     @Override
     public void delete(Visitor visitor) {
-        visitors.remove(visitor);
-    }
-
-    @Override
-    public void deleteById(int id) {
-        Visitor visitor = findById(id);
         if (visitor != null) {
             visitors.remove(visitor);
         }
     }
 
     @Override
-    public void deleteByObject(Visitor visitor) {
-        delete(visitor);
+    public void deleteById(int id) {
+
+        Visitor visitor = findById(id);
+
+        if (visitor != null) {
+            visitors.remove(visitor);
+        }
     }
 
     @Override
@@ -62,6 +71,7 @@ public class Visitors implements VisitorRepo {
         visitors.clear();
     }
 
+    @Override
     public int count() {
         return visitors.size();
     }

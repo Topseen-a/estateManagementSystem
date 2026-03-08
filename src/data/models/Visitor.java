@@ -6,19 +6,12 @@ public class Visitor {
     private String purposeOfComing;
     private String phoneNumber;
 
-    public String getPurposeOfComing() {
-        return purposeOfComing;
-    }
-
-    public void setPurposeOfComing(String purposeOfComing) {
+    public Visitor(String name, String purposeOfComing, String phoneNumber) {
+        validateName(name);
+        this.name = name;
+        validatePurpose(purposeOfComing);
         this.purposeOfComing = purposeOfComing;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
+        validatePhoneNumber(phoneNumber);
         this.phoneNumber = phoneNumber;
     }
 
@@ -34,7 +27,33 @@ public class Visitor {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getPurposeOfComing() {
+        return purposeOfComing;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    private static void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+    }
+
+    private static void validatePurpose(String purpose) {
+        if (purpose == null || purpose.isBlank()) {
+            throw new IllegalArgumentException("Purpose of coming cannot be empty");
+        }
+    }
+
+    private static void validatePhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isBlank()) {
+            throw new IllegalArgumentException("Phone number cannot be empty");
+        }
+
+        if (!phoneNumber.matches("\\d{11}")) {
+            throw new IllegalArgumentException("Phone number must be exactly 11 digits");
+        }
     }
 }

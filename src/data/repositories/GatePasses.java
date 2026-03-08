@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GatePasses implements GatePassRepo {
+
     private List<GatePass> gatePasses = new ArrayList<>();
     private int nextId = 1;
 
@@ -25,14 +26,34 @@ public class GatePasses implements GatePassRepo {
     }
 
     @Override
+    public List<GatePass> findByResidentId(int residentId) {
+
+        List<GatePass> residentGatePasses = new ArrayList<>();
+
+        for (GatePass pass : gatePasses) {
+            if (pass.getResidentId() == residentId) {
+                residentGatePasses.add(pass);
+            }
+        }
+        return residentGatePasses;
+    }
+
+    @Override
     public GatePass save(GatePass pass) {
+
+        if (pass == null) {
+            throw new IllegalArgumentException("GatePass cannot be null");
+        }
+
         if (pass.getId() == 0) {
             pass.setId(nextId++);
             gatePasses.add(pass);
         } else {
-            GatePass existing = findById(pass.getId());
-            if (existing != null) {
-                int index = gatePasses.indexOf(existing);
+
+            GatePass existingPass = findById(pass.getId());
+
+            if (existingPass != null) {
+                int index = gatePasses.indexOf(existingPass);
                 gatePasses.set(index, pass);
             } else {
                 gatePasses.add(pass);
@@ -43,20 +64,19 @@ public class GatePasses implements GatePassRepo {
 
     @Override
     public void delete(GatePass pass) {
-        gatePasses.remove(pass);
-    }
-
-    @Override
-    public void deleteById(int id) {
-        GatePass pass = findById(id);
         if (pass != null) {
             gatePasses.remove(pass);
         }
     }
 
     @Override
-    public void deleteByObject(GatePass pass) {
-        delete(pass);
+    public void deleteById(int id) {
+
+        GatePass pass = findById(id);
+
+        if (pass != null) {
+            gatePasses.remove(pass);
+        }
     }
 
     @Override
@@ -64,6 +84,7 @@ public class GatePasses implements GatePassRepo {
         gatePasses.clear();
     }
 
+    @Override
     public int count() {
         return gatePasses.size();
     }
