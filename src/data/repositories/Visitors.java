@@ -16,6 +16,11 @@ public class Visitors implements VisitorRepo {
     }
 
     @Override
+    public int count() {
+        return visitors.size();
+    }
+
+    @Override
     public Visitor findById(int id) {
         for (Visitor visitor : visitors) {
             if (visitor.getId() == id) {
@@ -69,10 +74,5 @@ public class Visitors implements VisitorRepo {
     @Override
     public void deleteAll() {
         visitors.clear();
-    }
-
-    @Override
-    public int count() {
-        return visitors.size();
     }
 }

@@ -16,6 +16,11 @@ public class Residents implements ResidentRepo {
     }
 
     @Override
+    public int count() {
+        return residents.size();
+    }
+
+    @Override
     public Resident findById(int id) {
         for (Resident resident : residents) {
             if (resident.getId() == id) {
@@ -69,10 +74,5 @@ public class Residents implements ResidentRepo {
     @Override
     public void deleteAll() {
         residents.clear();
-    }
-
-    @Override
-    public int count() {
-        return residents.size();
     }
 }

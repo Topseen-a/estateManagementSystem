@@ -16,6 +16,11 @@ public class GatePasses implements GatePassRepo {
     }
 
     @Override
+    public int count() {
+        return gatePasses.size();
+    }
+
+    @Override
     public GatePass findById(int id) {
         for (GatePass pass : gatePasses) {
             if (pass.getId() == id) {
@@ -82,10 +87,5 @@ public class GatePasses implements GatePassRepo {
     @Override
     public void deleteAll() {
         gatePasses.clear();
-    }
-
-    @Override
-    public int count() {
-        return gatePasses.size();
     }
 }
