@@ -1,24 +1,24 @@
-package data.repositories;
+package services;
 
 import data.models.Resident;
+import data.repositories.Residents;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import services.ResidentService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResidentServiceTest {
 
-    private ResidentService residentService;
+    private ResidentServiceImpl residentService;
 
     @BeforeEach
     public void setUp() {
-        residentService = new ResidentService(new Residents());
+        residentService = new ResidentServiceImpl(new Residents());
     }
 
     @Test
-    public void testThatServiceIsEmptyInitially() {
+    public void testThatResidentServiceListIsEmptyInitially() {
         assertTrue(residentService.getAllResidents().isEmpty());
         assertEquals(0, residentService.countResidents());
     }
@@ -70,6 +70,8 @@ public class ResidentServiceTest {
         assertTrue(residentService.getAllResidents().isEmpty());
 
         Resident resident = residentService.createResident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+
+        assertEquals(1, residentService.countResidents());
         residentService.deleteResident(resident.getId());
 
         assertEquals(0, residentService.countResidents());
