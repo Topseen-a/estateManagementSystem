@@ -1,4 +1,6 @@
 package notification;
 
-public class NotificationService {
+public interface NotificationService {
+
+    void notify(String receiver, String message);
 }
