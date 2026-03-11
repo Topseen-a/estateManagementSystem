@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GatePassesTest {
 
-    private GatePasses gatePasses;
+    private GatePassRepository gatePasses;
 
     @BeforeEach
     public void setUp() {
-        gatePasses = new GatePasses();
+        gatePasses = new GatePassRepository();
     }
 
     @Test

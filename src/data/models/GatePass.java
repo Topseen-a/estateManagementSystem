@@ -1,29 +1,19 @@
 package data.models;
 
 
+import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+@Data
 public class GatePass {
-    private int id;
-    private int residentId;
-    private int visitorId;
-
-    public GatePass(int residentId, int visitorId) {
-        this.residentId = residentId;
-        this.visitorId = visitorId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getResidentId() {
-        return residentId;
-    }
-
-    public int getVisitorId() {
-        return visitorId;
-    }
+    private String id;
+    private String code;
+    private Visitor visitor;
+    private String residentId;
+    private LocalTime validTill;
+    private LocalDateTime dateGenerated;
+    private Type passType;
+    private boolean isValid;
 }

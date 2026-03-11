@@ -8,11 +8,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ResidentsTest {
 
-    private Residents residents;
+    private ResidentRepository residents;
 
     @BeforeEach
     public void setUp() {
-        residents = new Residents();
+        residents = new ResidentRepository();
     }
 
     @Test

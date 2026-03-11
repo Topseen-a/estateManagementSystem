@@ -1,7 +1,7 @@
 package services;
 
 import data.models.GatePass;
-import data.repositories.GatePasses;
+import data.repositories.GatePassRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GatePassServiceTest {
 
-    private GatePassServiceImpl gatePassService;
+    private GateAccessService gatePassService;
 
     @BeforeEach
     public void setUp() {
-        gatePassService = new GatePassServiceImpl(new GatePasses());
+        gatePassService = new GateAccessService(new GatePassRepository());
     }
 
     @Test

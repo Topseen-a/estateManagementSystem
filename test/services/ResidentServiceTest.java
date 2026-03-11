@@ -1,7 +1,7 @@
 package services;
 
 import data.models.Resident;
-import data.repositories.Residents;
+import data.repositories.ResidentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResidentServiceTest {
 
-    private ResidentServiceImpl residentService;
+    private ResidentManagementService residentService;
 
     @BeforeEach
     public void setUp() {
-        residentService = new ResidentServiceImpl(new Residents());
+        residentService = new ResidentManagementService(new ResidentRepository());
     }
 
     @Test
