@@ -1,5 +1,8 @@
 package dtos.responses;
 
+import lombok.Data;
+
+@Data
 public class GenerateVisitorEntryCodeResponse {
 
     private String code;

@@ -1,5 +1,8 @@
 package dtos.responses;
 
+import lombok.Data;
+
+@Data
 public class ValidateCodeResponse {
 
     private String residentName;

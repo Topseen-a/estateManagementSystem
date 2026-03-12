@@ -3,16 +3,24 @@ package data.repositories;
 import data.models.Resident;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResidentsTest {
 
+    @Autowired
     private ResidentRepository residents;
+
 
     @BeforeEach
     public void setUp() {
-        residents = new ResidentRepository();
+
+
+
     }
 
     @Test
@@ -53,7 +61,7 @@ public class ResidentsTest {
         Resident residentOne = new Resident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
         residents.save(residentOne);
 
-        residents.findById(1);
+        residents.findById("1");
 
         assertEquals("Tayo Ade", residentOne.getName());
         assertEquals("08149587217", residentOne.getPhoneNumber());
@@ -64,7 +72,7 @@ public class ResidentsTest {
     public void testThatFindByIdWithNoResidentCountIsZero() {
         assertTrue(residents.findAll().isEmpty());
 
-        residents.findById(99);
+        residents.findById("99");
         assertEquals(0, residents.count());
     }
 
@@ -103,7 +111,7 @@ public class ResidentsTest {
         residents.save(residentOne);
         residents.save(residentTwo);
 
-        residents.deleteById(1);
+        residents.deleteById("1");
 
         assertEquals(1, residents.count());
     }
@@ -135,7 +143,10 @@ public class ResidentsTest {
 
         residents.save(updatedResident);
 
-        Resident found = residents.findById(1);
+        Optional<Resident> found  = residents.findById("1");
+        if (found.isPresent()) {
+            found.get()
+        }
 
         assertEquals("Shina Dada", found.getName());
         assertEquals("Alagomeji Yaba, Lagos", found.getHouseAddress());
@@ -151,7 +162,7 @@ public class ResidentsTest {
         residents.save(residentOne);
         residents.save(residentTwo);
 
-        residents.deleteById(1);
+        residents.deleteById("1");
 
         Resident residentThree = new Resident("Bayo Remi", "09012345678", "Agege Lagos");
         residents.save(residentThree);

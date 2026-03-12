@@ -1,6 +1,9 @@
 package dtos.responses;
 
 
+import lombok.Data;
+
+@Data
 public class GenerateResidentEntryCodeResponse {
 
     private String code;

@@ -14,7 +14,7 @@ public class ResidentServiceTest {
 
     @BeforeEach
     public void setUp() {
-        residentService = new ResidentManagementService(new ResidentRepository());
+
     }
 
     @Test

@@ -1,5 +1,9 @@
 package dtos.requests;
 
+
+import lombok.Data;
+
+@Data
 public class GenerateVisitorEntryCodeRequest {
 
     private String residentId;
