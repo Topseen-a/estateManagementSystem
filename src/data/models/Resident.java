@@ -1,24 +1,29 @@
 package data.models;
 
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
 @Document
-@RequiredArgsConstructor
 public class Resident {
+
+    @Id
     private String id;
-    @NonNull
     private String name;
-    @NonNull
     private String phoneNumber;
-    @NonNull
     private String houseAddress;
     private String email;
-    private LocalDateTime dateRegistered;
-    private boolean isEnabled;
+    private LocalDateTime dateRegistered = LocalDateTime.now();
+    private boolean isEnabled = true;
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Resident resident) {
+            return this.getId().equals(resident.getId()) || this.getPhoneNumber().equals(resident.getPhoneNumber());
+        }
+        return false;
+    }
 }

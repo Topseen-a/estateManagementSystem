@@ -1,4 +1,8 @@
 package exceptions;
 
-public class GatePassDoesNotExist {
+public class GatePassDoesNotExist extends RuntimeException {
+
+    public GatePassDoesNotExist(String message) {
+
+    }
 }

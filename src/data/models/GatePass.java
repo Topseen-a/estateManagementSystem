@@ -1,23 +1,22 @@
 package data.models;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class GatePass {
+
+    @Id
     private String id;
     private String code;
     private Visitor visitor;
     private String residentId;
     private LocalTime validTill;
-    private LocalDateTime dateGenerated;
+    private LocalDateTime dateGenerated =  LocalDateTime.now();
     private Type passType;
     private boolean isValid;
 }
