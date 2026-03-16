@@ -10,6 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ResidentRepository extends MongoRepository<Resident, String> {
 
-    Resident existsByIdOrPhoneNumber(String id, String phoneNumber);
-    Optional<Resident> findById(String id);
+    boolean existsByEmailOrPhoneNumber(String email, String phoneNumber);
+
+    Optional<Resident> findByPhoneNumber(String phoneNumber);
+
+    Optional<Resident> findByEmail(String email);
 }

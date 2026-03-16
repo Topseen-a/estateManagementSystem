@@ -18,12 +18,4 @@ public class Resident {
     private String email;
     private LocalDateTime dateRegistered = LocalDateTime.now();
     private boolean isEnabled = true;
-
-    @Override
-    public boolean equals(Object object) {
-        if (object instanceof Resident resident) {
-            return this.getId().equals(resident.getId()) || this.getPhoneNumber().equals(resident.getPhoneNumber());
-        }
-        return false;
-    }
 }
