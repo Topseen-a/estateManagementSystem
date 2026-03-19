@@ -17,6 +17,4 @@ public interface GatePassRepository extends MongoRepository<GatePass, String> {
     List<GatePass> findByResidentId(String residentId);
 
     Optional<GatePass> findByCodeAndIsValid(String code, boolean isValid);
-
-    List<GatePass> findByResidentIdAndIsValid(String residentId, boolean isValid);
 }

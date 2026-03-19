@@ -144,7 +144,7 @@ public class ResidentsTest {
 
         Optional<Resident> found  = residents.findById("1");
         if (found.isPresent()) {
-            found.get()
+            found.get();
         }
 
         assertEquals("Shina Dada", found.getName());

@@ -13,6 +13,4 @@ public interface ResidentRepository extends MongoRepository<Resident, String> {
     boolean existsByEmailOrPhoneNumber(String email, String phoneNumber);
 
     Optional<Resident> findByPhoneNumber(String phoneNumber);
-
-    Optional<Resident> findByEmail(String email);
 }
