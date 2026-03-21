@@ -3,7 +3,7 @@ package com.estate.services;
 import com.estate.data.models.GatePass;
 import com.estate.data.repositories.GatePassRepository;
 import com.estate.data.repositories.ResidentRepository;
-import com.estate.exceptions.GatePassDoesNotExist;
+import com.estate.exceptions.GatePassDoesNotExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class MonitoringService {
 
     public boolean isGatePassExpired(String code) {
         GatePass gatePass = gatePassRepository.findByCode(code)
-                .orElseThrow(() -> new GatePassDoesNotExist("GatePass code not found"));
+                .orElseThrow(() -> new GatePassDoesNotExistException("GatePass code not found"));
 
         return gatePass.getValidTill().isBefore(LocalTime.now());
     }

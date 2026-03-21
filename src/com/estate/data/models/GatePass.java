@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
-@Document
+@Document(collection = "gate_passes")
 public class GatePass {
 
     @Id
@@ -20,5 +20,5 @@ public class GatePass {
     private LocalTime validTill;
     private LocalDateTime dateGenerated =  LocalDateTime.now();
     private Type passType;
-    private boolean isValid;
+    private boolean isValid = true;
 }
