@@ -2,6 +2,8 @@ package com.estate.controllers;
 
 import com.estate.data.models.Visitor;
 import com.estate.dtos.requests.GenerateResidentEntryCodeRequest;
+import com.estate.dtos.requests.GenerateVisitorEntryCodeRequest;
+import com.estate.dtos.requests.ValidateCodeRequest;
 import com.estate.dtos.responses.GenerateResidentEntryCodeResponse;
 import com.estate.dtos.responses.ValidateCodeResponse;
 import com.estate.services.GateAccessService;
@@ -19,35 +21,38 @@ public class GateAccessController {
     private final GateAccessService gateAccessService;
 
     @PostMapping("/generate")
-    public ResponseEntity<GenerateResidentEntryCodeResponse> generateGatePass(@RequestBody GenerateResidentEntryCodeRequest request, @RequestParam(required = false) String visitorName, @RequestParam(required = false) String visitorPhoneNumber) {
+    public ResponseEntity<GenerateResidentEntryCodeResponse> generateGatePass(@RequestBody GenerateVisitorEntryCodeRequest request) {
 
-        GenerateResidentEntryCodeResponse response;
+        Visitor visitor = new Visitor();
+        visitor.setName(request.getVisitorName());
+        visitor.setPhoneNumber(request.getVisitorPhoneNumber());
+        visitor.setPurposeOfComing(request.getPurposeOfVisit());
 
-        if (visitorName != null && visitorPhoneNumber != null) {
-            Visitor visitor = new Visitor();
-            visitor.setName(visitorName);
-            visitor.setPhoneNumber(visitorPhoneNumber);
-            response = gateAccessService.generateGatePass(request, visitor);
-        } else {
-            response = gateAccessService.generateGatePass(request, null);
-        }
+        GenerateResidentEntryCodeRequest residentRequest = new GenerateResidentEntryCodeRequest();
+        residentRequest.setResidentId(request.getResidentId());
+
+        GenerateResidentEntryCodeResponse response = gateAccessService.generateGatePass(residentRequest, visitor);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/validate")
-    public ResponseEntity<ValidateCodeResponse> validateGatePass(@RequestParam String code) {
-        ValidateCodeResponse response = gateAccessService.validateGatePass(code);
+    @PostMapping("/validate")
+    public ResponseEntity<ValidateCodeResponse> validateGatePass(@RequestBody ValidateCodeRequest request) {
+
+        ValidateCodeResponse response = gateAccessService.validateGatePass(request.getCode());
+
         if (response == null) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/resident/{residentId}")
-    public ResponseEntity<List<GenerateResidentEntryCodeResponse>> getPassesByResident(
-            @PathVariable String residentId) {
+    public ResponseEntity<List<GenerateResidentEntryCodeResponse>> getPassesByResident(@PathVariable String residentId) {
+
         List<GenerateResidentEntryCodeResponse> passes = gateAccessService.getPassesByResident(residentId);
+
         return ResponseEntity.ok(passes);
     }
 }
