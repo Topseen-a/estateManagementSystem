@@ -7,6 +7,6 @@ import lombok.Data;
 public class OnboardResidentResponse {
 
     private String residentId;
-    private String dateRegistered;
     private String residentName;
+    private String dateRegistered;
 }

@@ -21,7 +21,7 @@ public class MonitoringService {
         return residentRepository.count();
     }
 
-    public long getTotalGates() {
+    public long getTotalGatePasses() {
         return gatePassRepository.count();
     }
 
@@ -30,7 +30,10 @@ public class MonitoringService {
     }
 
     public List<GatePass> getGatePassesForResident(String residentId) {
-        return gatePassRepository.findByResidentId(residentId);
+        return gatePassRepository.findAll()
+                .stream()
+                .filter(gatePass -> residentId.equals(gatePass.getResidentId()))
+                .toList();
     }
 
     public boolean isGatePassExpired(String code) {

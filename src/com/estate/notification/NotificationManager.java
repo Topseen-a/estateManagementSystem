@@ -2,17 +2,14 @@ package com.estate.notification;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class NotificationManager {
 
-    @Autowired
-    private EmailNotificationService emailNotificationService;
-
-    @Autowired
-    private SmsNotificationService smsNotificationService;
+    private final EmailNotificationService emailNotificationService;
+    private final SmsNotificationService smsNotificationService;
 
     public void notifyByEmailAndSms(String email, String phoneNumber, String message) {
         if (email != null && !email.isEmpty()) {
