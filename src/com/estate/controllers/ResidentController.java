@@ -1,6 +1,7 @@
 package com.estate.controllers;
 
 import com.estate.data.models.Resident;
+import com.estate.dtos.requests.OnboardResidentRequest;
 import com.estate.dtos.responses.OnboardResidentResponse;
 import com.estate.mapper.Mapper;
 import com.estate.services.ResidentManagementService;
@@ -19,9 +20,9 @@ public class ResidentController {
     private final Mapper mapper;
 
     @PostMapping("/register")
-    public ResponseEntity<OnboardResidentResponse> registerResident(@RequestBody Resident resident) {
-        Resident savedResident = residentService.registerResident(resident);
-        return ResponseEntity.ok(mapper.toOnboardResidentResponse(savedResident));
+    public ResponseEntity<OnboardResidentResponse> registerResident(@RequestBody OnboardResidentRequest request) {
+        OnboardResidentResponse response = residentService.registerResident(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -31,8 +32,13 @@ public class ResidentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Resident>> getAllResidents() {
-        return ResponseEntity.ok(residentService.getAllResidents());
+    public ResponseEntity<List<OnboardResidentResponse>> getAllResidents() {
+        List<OnboardResidentResponse> responses = residentService.getAllResidents()
+                .stream()
+                .map(mapper::toOnboardResidentResponse)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
     @PutMapping("/{id}/status")

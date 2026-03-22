@@ -1,78 +1,148 @@
 package com.estate.services;
 
 import com.estate.data.models.Resident;
+import com.estate.data.repositories.ResidentRepository;
+import com.estate.dtos.requests.OnboardResidentRequest;
+import com.estate.dtos.responses.OnboardResidentResponse;
+import com.estate.exceptions.ResidentAlreadyRegisteredException;
+import com.estate.exceptions.ResidentDoesNotExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
 public class ResidentManagementServiceTest {
 
+    @Autowired
     private ResidentManagementService residentService;
+
+    @Autowired
+    private ResidentRepository residentRepository;
 
     @BeforeEach
     public void setUp() {
-
+        residentRepository.deleteAll();
     }
 
     @Test
-    public void testThatResidentServiceListIsEmptyInitially() {
-        assertTrue(residentService.getAllResidents().isEmpty());
-        assertEquals(0, residentService.countResidents());
+    public void testThatResidentCanBeOnboarded() {
+        OnboardResidentRequest request = new OnboardResidentRequest();
+        request.setName("Oluwaseun");
+        request.setPhoneNumber("08012345678");
+        request.setEmail("oluwaseun@gmail.com");
+
+        OnboardResidentResponse response = residentService.registerResident(request);
+
+        assertNotNull(response.getResidentId());
+        assertEquals("Oluwaseun", response.getResidentName());
     }
 
     @Test
-    public void testThatResidentCanBeCreated() {
-        assertTrue(residentService.getAllResidents().isEmpty());
+    public void testThatMultipleResidentsCanBeOnboarded() {
+        OnboardResidentRequest requestOne = new OnboardResidentRequest();
+        requestOne.setName("Oluwaseun");
+        requestOne.setPhoneNumber("08012345678");
+        requestOne.setEmail("oluwaseun@gmail.com");
+        residentService.registerResident(requestOne);
 
-        Resident resident = residentService.createResident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
-        assertEquals(1,resident.getId());
-        assertEquals(1, residentService.countResidents());
-        assertEquals("Tayo Ade", resident.getName());
+        OnboardResidentRequest requestTwo = new OnboardResidentRequest();
+        requestTwo.setName("Toluwani");
+        requestTwo.setPhoneNumber("08118927456");
+        requestTwo.setEmail("toluwani@gmail.com");
+        residentService.registerResident(requestTwo);
+
+        List<Resident> allResidents = residentService.getAllResidents();
+
+        assertNotNull(allResidents);
+        assertEquals(2, allResidents.size());
     }
 
     @Test
-    public void testThatAllMultipleResidentsCanBeCreated() {
-        assertTrue(residentService.getAllResidents().isEmpty());
+    public void testThatOnboardSameResidentTwiceThrowsAnError() {
+        OnboardResidentRequest request = new OnboardResidentRequest();
+        request.setName("Oluwaseun");
+        request.setPhoneNumber("08012345678");
+        request.setEmail("oluwaseun@gmail.com");
 
-        residentService.createResident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
-        residentService.createResident("Tolu Folusho", "08033297106", "Alagomeji Yaba, Lagos");
-        assertEquals(2, residentService.countResidents());
+        residentService.registerResident(request);
+
+        OnboardResidentRequest duplicate = new OnboardResidentRequest();
+        duplicate.setName("Oluwaseun");
+        duplicate.setPhoneNumber("08012345678");
+        duplicate.setEmail("oluwaseun@gmail.com");
+
+        assertThrows(ResidentAlreadyRegisteredException.class, () -> residentService.registerResident(duplicate));
     }
 
     @Test
     public void testThatFindResidentByIdReturnsResident() {
-        assertTrue(residentService.getAllResidents().isEmpty());
+        OnboardResidentRequest request = new OnboardResidentRequest();
+        request.setName("Oluwaseun");
+        request.setPhoneNumber("08012345678");
+        request.setEmail("oluwaseun@gmail.com");
 
-        Resident resident = residentService.createResident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        OnboardResidentResponse response = residentService.registerResident(request);
 
-        Resident foundResident = residentService.findResidentById(resident.getId());
-
-        assertEquals("Tayo Ade", foundResident.getName());
-        assertEquals("08149587217", foundResident.getPhoneNumber());
+        Resident found = residentService.findResidentById(response.getResidentId());
+        assertEquals("Oluwaseun", found.getName());
     }
 
     @Test
-    public void testThatResidentCanBeUpdated() {
-        assertTrue(residentService.getAllResidents().isEmpty());
+    public void testThatFindResidentByIdThatDoesNotExistThrowsAnError() {
+        assertThrows(ResidentDoesNotExistException.class, () -> residentService.findResidentById("Resident not found"));
+    }
 
-        Resident resident = residentService.createResident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
-        Resident updatedResident = residentService.updateResident(resident.getId(), "Ajayi Deborah", "09032277492", "Ipaja, Lagos");
+    @Test
+    public void testThatGetAllResidentsReturnsAllResidents() {
+        OnboardResidentRequest requestOne = new OnboardResidentRequest();
+        requestOne.setName("Oluwaseun");
+        requestOne.setPhoneNumber("08012345678");
+        requestOne.setEmail("oluwaseun@gmail.com");
+        residentService.registerResident(requestOne);
 
-        assertEquals("Ajayi Deborah", updatedResident.getName());
-        assertEquals(1, residentService.countResidents());
+        OnboardResidentRequest requestTwo = new OnboardResidentRequest();
+        requestTwo.setName("Toluwani");
+        requestTwo.setPhoneNumber("08118927456");
+        requestTwo.setEmail("toluwani@gmail.com");
+        residentService.registerResident(requestTwo);
+
+        List<Resident> residents = residentService.getAllResidents();
+        assertEquals(2, residents.size());
+    }
+
+    @Test
+    public void testThatResidentCanBeEnabledAndDisable() {
+        OnboardResidentRequest request = new OnboardResidentRequest();
+        request.setName("Oluwaseun");
+        request.setPhoneNumber("08012345678");
+        request.setEmail("oluwaseun@gmail.com");
+
+        OnboardResidentResponse response = residentService.registerResident(request);
+
+        Resident disabled = residentService.updateResidentStatus(response.getResidentId(), false);
+        assertFalse(disabled.isEnabled());
+
+        Resident enabled = residentService.updateResidentStatus(response.getResidentId(), true);
+        assertTrue(enabled.isEnabled());
     }
 
     @Test
     public void testThatResidentCanBeDeleted() {
-        assertTrue(residentService.getAllResidents().isEmpty());
+        OnboardResidentRequest request = new OnboardResidentRequest();
+        request.setName("Oluwaseun");
+        request.setPhoneNumber("08012345678");
+        request.setEmail("oluwaseun@gmail.com");
 
-        Resident resident = residentService.createResident("Tayo Ade", "08149587217", "Sabo Yaba, Lagos");
+        OnboardResidentResponse response = residentService.registerResident(request);
 
-        assertEquals(1, residentService.countResidents());
-        residentService.deleteResident(resident.getId());
+        residentService.deleteResident(response.getResidentId());
 
-        assertEquals(0, residentService.countResidents());
+        assertThrows(ResidentDoesNotExistException.class,
+                () -> residentService.findResidentById(response.getResidentId()));
     }
 }

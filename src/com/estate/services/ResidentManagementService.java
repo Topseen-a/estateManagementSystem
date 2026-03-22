@@ -2,11 +2,15 @@ package com.estate.services;
 
 import com.estate.data.models.Resident;
 import com.estate.data.repositories.ResidentRepository;
+import com.estate.dtos.requests.OnboardResidentRequest;
+import com.estate.dtos.responses.OnboardResidentResponse;
 import com.estate.exceptions.ResidentAlreadyRegisteredException;
 import com.estate.exceptions.ResidentDoesNotExistException;
+import com.estate.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,12 +18,24 @@ import java.util.List;
 public class ResidentManagementService {
 
     private final ResidentRepository residentRepository;
+    private final Mapper mapper;
 
-    public Resident registerResident(Resident resident) {
-        if (residentRepository.existsByEmailOrPhoneNumber(resident.getEmail(), resident.getPhoneNumber())) {
+    public OnboardResidentResponse registerResident(OnboardResidentRequest request) {
+
+        if (residentRepository.existsByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber())) {
             throw new ResidentAlreadyRegisteredException("Resident already exists");
         }
-        return residentRepository.save(resident);
+
+        Resident resident = new Resident();
+        resident.setName(request.getName());
+        resident.setEmail(request.getEmail());
+        resident.setPhoneNumber(request.getPhoneNumber());
+        resident.setEnabled(true);
+        resident.setDateRegistered(LocalDateTime.now());
+
+        Resident savedResident = residentRepository.save(resident);
+
+        return mapper.toOnboardResidentResponse(savedResident);
     }
 
     public Resident findResidentByPhoneNumber(String phoneNumber) {
@@ -40,5 +56,10 @@ public class ResidentManagementService {
         Resident resident = findResidentById(residentId);
         resident.setEnabled(isEnabled);
         return residentRepository.save(resident);
+    }
+
+    public void deleteResident(String residentId) {
+        Resident resident = findResidentById(residentId);
+        residentRepository.delete(resident);
     }
 }
