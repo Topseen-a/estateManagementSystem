@@ -51,6 +51,8 @@ public class GateAccessService {
         gatePass.setPassType(Type.ENTRY);
         gatePass.setValid(true);
 
+        gatePassRepository.save(gatePass);
+
         notificationManager.notifyByEmailAndSms(resident.getEmail(), resident.getPhoneNumber(), "Your gate pass code is " +  code);
 
         return mapper.toGenerateResidentEntryCodeResponse(gatePass, resident);
